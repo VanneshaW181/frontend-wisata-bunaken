@@ -53,15 +53,24 @@ if (!isset($_SESSION['username'])) {
                 	</form>
                 	<?php
                 	if(isset($_POST['simpan'])){
+                        $url_post_penginapan = "{$baseUrl}/penginapan";
                 		$folder = './asset/penginapan/';
                 		$name_p = $_FILES['foto']['name'];
                 		$sumber_p = $_FILES['foto']['tmp_name'];
                 		move_uploaded_file($sumber_p, $folder.$name_p);
-                		$insert = mysqli_query(
-                		    $conn, 
-                		    "INSERT INTO penginapan VALUES (NULL,'".$_POST['nama']."','".$_POST['deskripsi']."','".$_POST['kapasitas']."','".$_POST['lokasi']."','".$name_p."')"
-                		);
-                		if($insert){
+                        $data_post_penginapan = (['nama_penginapan' => $_POST['nama'], 'deskripsi_penginapan' => $_POST['deskripsi'],'kapasitas_penginapan' => $_POST['kapasitas'], 'lokasi_penginapan' => $_POST['lokasi'], 'foto_penginapan' => $name_p]);
+                        $options = array(
+                            'http' => array(
+                            'header'  => "Content-type: application/json\r\n",
+                            'method'  => 'POST',
+                            'content' => json_encode($data_post_penginapan),
+                        )
+                    );
+                    $context  = stream_context_create($options);
+                    $result = file_get_contents( $url_post_penginapan, false, $context );
+                    $response = json_decode( $result );
+                       
+                		if($response){
                 			echo'Data berhasil disimpan';
                 		}else{
                 			echo'Gagal disimpan';

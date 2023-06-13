@@ -49,16 +49,13 @@ include 'koneksi.php';
                     -->
                     <ul class="package-list">
                         <?php
-                        $url = "http://localhost:3000/penginapan";
+                        $url = "{$baseUrl}/penginapan";
 	
                         $response = file_get_contents($url);
                         $data = json_decode($response);
                         
                         $result = $data->data;
-                        
-                        
-                        	// $penginapan = mysqli_query($conn, "SELECT * FROM penginapan");
-                            // while($hasil = mysqli_fetch_array($penginapan)){
+    
                                 foreach($result as $hasil) {
                         ?>
                     	
@@ -167,16 +164,13 @@ include 'koneksi.php';
             
             <section id="gallery2">
                 <?php
-                 $url_galeri = "http://localhost:3000/galeri";
+                 $url_galeri = "{$baseUrl}/galeri";
 	
                  $response_galeri = file_get_contents($url_galeri);
                  $data_galeri = json_decode($response_galeri);
                  
                  $result_galeri = $data_galeri->data;
                  
-                 
-                	// $galeri = mysqli_query($conn, "SELECT * FROM galeri");
-                	// while($hasil = mysqli_fetch_array($galeri)){
                         foreach($result_galeri as $hasil_galeri){
 
                 	?>

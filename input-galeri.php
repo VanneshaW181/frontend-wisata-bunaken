@@ -47,7 +47,7 @@ if (!isset($_SESSION['username'])) {
                 	</form>
                 	<?php
                     if(isset($_POST['simpan'])){
-                        $url_post_galeri = "http://localhost:3000/galeri";
+                        $url_post_galeri = "{$baseUrl}/galeri";
                 		$folder = './asset/gallery/data/';
                 		$name_p = $_FILES['foto']['name'];
                 		$sumber_p = $_FILES['foto']['tmp_name'];
@@ -63,10 +63,7 @@ if (!isset($_SESSION['username'])) {
                     $context  = stream_context_create($options);
                     $result = file_get_contents( $url_post_galeri, false, $context );
                     $response = json_decode( $result );
-                        // $insert = mysqli_query(
-                		//     $conn, 
-                		//     "INSERT INTO galeri VALUES (NULL,'".$_POST['judul']."','".$name_p."','".$_POST['deskripsi']."',NULL)"
-                		// );
+                       
                 		if($response){
                 			echo'Data berhasil disimpan';
                 		}else{

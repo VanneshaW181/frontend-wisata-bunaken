@@ -11,32 +11,28 @@ if (isset($_SESSION['username'])) {
 }
  
 if (isset($_POST['submit'])) {
+    $url_post_register = "{$baseUrl}/register";
     $username = $_POST['username'];
     $email = $_POST['email'];
     $password = md5($_POST['password']);
     $cpassword = md5($_POST['cpassword']);
  
     if ($password == $cpassword) {
-        $sql = "SELECT * FROM users WHERE email='$email'";
-        $result = mysqli_query($conn, $sql);
-        if (!$result->num_rows > 0) {
-            $sql = "INSERT INTO users (username, email, password)
-                    VALUES ('$username', '$email', '$password')";
-            $result = mysqli_query($conn, $sql);
-            if ($result) {
-                echo "<script>alert('Selamat, registrasi berhasil!')</script>";
-                $username = "";
-                $email = "";
-                $_POST['password'] = "";
-                $_POST['cpassword'] = "";
-            } else {
-                echo "<script>alert('Woops! Terjadi kesalahan.')</script>";
-            }
-        } else {
-            echo "<script>alert('Woops! Email Sudah Terdaftar.')</script>";
-        }
-         
-    } else {
+        $data_post_register = (['username' => $_POST['username'], 'email' => $_POST['email'], 'password' => $password]);
+        $options = array(
+            'http' => array(
+            'header'  => "Content-type: application/json\r\n",
+            'method'  => 'POST',
+            'content' => json_encode($data_post_register),
+        )
+    );
+    $context  = stream_context_create($options);
+    $result = file_get_contents( $url_post_register, false, $context );
+    $response = json_decode( $result );
+       
+   echo "<script>alert('$response->message')</script>"; 
+   header("Location: login.php");
+} else {
         echo "<script>alert('Password Tidak Sesuai')</script>";
     }
 }
